@@ -6,7 +6,7 @@ secrets:
   - 130adee5-3a8f-4035-8cad-e3d044be2961
 
 sources:
-  - https://git.sr.ht/~jswank/apkdev
+  - https://git.sr.ht/~jswank/python-cdk
 
 packages:
   - podman
@@ -22,7 +22,7 @@ tasks:
   # build the image using the just recipe
   #   - sudo (-u root) is required to run podman without more setup
   - build: |
-      cd apkdev
+      cd python-cdk
       sudo --preserve-env just build
 
   # publish the image using the just recipe
@@ -31,7 +31,5 @@ tasks:
   #   - sudo (-u root) is required to run podman without more setup
   #   - sudo --preserve-env is required to pass environment variables 
   - publish: |
-      cd apkdev
-      chpst -e ~/.envdir sudo --preserve-env just pass_var=GH_PAT publish-ghcr
-      chpst -e ~/.envdir sudo --preserve-env just pass_var=DH_PAT publish-docker
-      chpst -e ~/.envdir sudo --preserve-env just pass_var=QUAY_PAT publish-quay
+      cd python-cdk 
+      chpst -e ~/.envdir sudo --preserve-env just registry_pass_var=GH_PAT publish

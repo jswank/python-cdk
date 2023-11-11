@@ -30,7 +30,7 @@ default: persist
 # the project
 #
 # Examples:
-#   apkdev persist
+#   cdkdev persist
 #
 # Run (or attach to) a persistent container.
 persist aport="": 

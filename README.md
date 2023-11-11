@@ -1,4 +1,4 @@
-# apkdev
+# cdkdev
 
 A minimal image for using the Python AWS CDK
 
