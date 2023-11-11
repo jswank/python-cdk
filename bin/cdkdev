@@ -1,0 +1,75 @@
+#!/usr/bin/env -S just --working-directory . --justfile
+
+# path to the cdk project on this host - default to the current working
+# directory.
+proj_path := invocation_directory()
+proj := file_name(proj_path)
+
+image := "ghcr.io/jswank/python-cdk:latest"
+n := "cdkdev"
+
+# Invoke the 'persist' recipe
+default: persist
+
+# Usage: run
+#
+# Start a shell in an ephemeral container, mounting the current directory as
+# the project
+#
+# Examples:
+#   cdkdev run
+#
+# Run an ephemeral container.
+@run:
+  podman run -ti --userns=keep-id -v {{proj_path}}:/home/cli/{{proj}} \
+    --workdir /home/cli/{{proj}} --rm {{image}}
+
+# Usage: persist
+#
+# Start a shell in an ephemeral container, mounting the current directory as
+# the project
+#
+# Examples:
+#   apkdev persist
+#
+# Run (or attach to) a persistent container.
+persist aport="": 
+  #!/bin/sh
+  if [ $(podman ps --all --filter name="^{{n}}$" -q | wc -l) -gt 0 ]; then
+    podman start -i -a {{n}}
+  else
+  podman run -ti --userns=keep-id -v {{proj_path}}:/home/cli/{{proj}} \
+    --workdir /home/cli/{{proj}} --name {{n}} {{image}}
+  fi
+
+# Remove the persistent container
+@clean:
+  podman rm -f {{n}} >/dev/null 2>&1
+
+# Usage: save [new_image_name]
+#
+# Sometimes you want a quick snapshot of your work in progress. Use this target
+# to create an image based on the running container.
+#
+# Examples:
+#    cdkdev save foo` - saves the current (persistent) container as a new image
+#                       named "foo"
+# `  cdkdev save      - saves the current (persistent) container as a new
+#                       default image
+#
+# Save the running container as a new image
+save image=image:
+  podman commit -q {{n}} {{image}} >/dev/null 2>&1
+
+# Remove a running container, and run the default recipe
+@restart: clean default
+
+# Display this listing. Detailed help is available with 'help recipe_name'.
+help recipe="help":
+  #!/bin/sh
+  if [ "{{recipe}}" = "help" ]; then
+    just --list --justfile {{justfile()}}
+  else
+    grep -B 32 -E '^@?{{recipe}}\s?.*:' {{justfile()}} \
+      | tac |  awk 'NR==1 {print; next}; !/^#/{exit}1;' | tac
+  fi

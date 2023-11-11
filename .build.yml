@@ -1,0 +1,37 @@
+image: alpine/edge
+
+secrets:
+  - 0ee986ff-5686-43cd-ac3a-1fe5b2e5dd8f
+  - f523ee29-5ef8-490f-8903-43ad7c49060b 
+  - 130adee5-3a8f-4035-8cad-e3d044be2961
+
+sources:
+  - https://git.sr.ht/~jswank/apkdev
+
+packages:
+  - podman
+  - just
+  - runit
+
+tasks:
+  # cgroups need to be running in order to run podman
+  - prep: |
+      sudo rc-service cgroups start
+      sleep 1
+
+  # build the image using the just recipe
+  #   - sudo (-u root) is required to run podman without more setup
+  - build: |
+      cd apkdev
+      sudo --preserve-env just build
+
+  # publish the image using the just recipe
+  #   - set environment variables from the ~/.envdir directory. see
+  #   http://smarden.org/runit/chpst.8.html for details on chpst
+  #   - sudo (-u root) is required to run podman without more setup
+  #   - sudo --preserve-env is required to pass environment variables 
+  - publish: |
+      cd apkdev
+      chpst -e ~/.envdir sudo --preserve-env just pass_var=GH_PAT publish-ghcr
+      chpst -e ~/.envdir sudo --preserve-env just pass_var=DH_PAT publish-docker
+      chpst -e ~/.envdir sudo --preserve-env just pass_var=QUAY_PAT publish-quay
