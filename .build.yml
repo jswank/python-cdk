@@ -31,5 +31,5 @@ tasks:
   #   - sudo (-u root) is required to run podman without more setup
   #   - sudo --preserve-env is required to pass environment variables 
   - publish: |
-      cd python-cdk 
+      cd python-cdk
       chpst -e ~/.envdir sudo --preserve-env just registry_pass_var=GH_PAT publish
