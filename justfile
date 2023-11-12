@@ -1,6 +1,6 @@
 set dotenv-load
 
-tag := `git rev-parse --abbrev-ref HEAD`
+tag := "latest:
 image := "jswank/python-cdk"
 
 registry := "ghcr.io"
