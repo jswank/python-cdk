@@ -1,6 +1,6 @@
 set dotenv-load
 
-tag := `grep ^FROM Dockerfile | cut -d: -f2`
+tag := `git rev-parse --abbrev-ref HEAD`
 image := "jswank/python-cdk"
 
 registry := "ghcr.io"
