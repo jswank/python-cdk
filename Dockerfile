@@ -1,5 +1,7 @@
 FROM ghcr.io/jswank/alpine-cli:edge
 
+LABEL org.opencontainers.image.description A CLI environment for AWS CLI & CDK
+
 USER root
 
 RUN apk add -U --no-cache stow curl git just \
