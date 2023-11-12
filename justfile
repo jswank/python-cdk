@@ -1,6 +1,6 @@
 set dotenv-load := true
 
-tag := "latest
+tag := "latest"
 image := "jswank/python-cdk"
 registry := "ghcr.io"
 registry_user := "jswank"
