@@ -1,4 +1,5 @@
 #!/usr/bin/env -S just --working-directory . --justfile
+set dotenv-load
 
 # path to the cdk project on this host - default to the current working
 # directory.
@@ -8,8 +9,8 @@ proj := file_name(proj_path)
 image := "ghcr.io/jswank/python-cdk:latest"
 n := "cdkdev"
 
-# Invoke the 'persist' recipe
-default: persist
+# Invoke the ephemeral 'run' recipe
+default: run
 
 # Usage: run
 #
@@ -22,7 +23,11 @@ default: persist
 # Run an ephemeral container.
 @run:
   podman run -ti --userns=keep-id -v {{proj_path}}:/home/cli/{{proj}} \
-    --workdir /home/cli/{{proj}} --rm {{image}}
+    --workdir /home/cli/{{proj}} --rm \
+    --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    --env AWS_REGION=$AWS_REGION \
+    {{image}} 
 
 # Usage: persist
 #
@@ -39,7 +44,11 @@ persist aport="":
     podman start -i -a {{n}}
   else
   podman run -ti --userns=keep-id -v {{proj_path}}:/home/cli/{{proj}} \
-    --workdir /home/cli/{{proj}} --name {{n}} {{image}}
+    --workdir /home/cli/{{proj}} --name {{n}} \
+    --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    --env AWS_REGION=$AWS_REGION \
+    {{image}}
   fi
 
 # Remove the persistent container
