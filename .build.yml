@@ -32,4 +32,4 @@ tasks:
   #   - sudo --preserve-env is required to pass environment variables 
   - publish: |
       cd python-cdk
-      chpst -e ~/.envdir sudo --preserve-env REGISTRY_PASS_VAR=GH_PAT go-task publish
+      chpst -e ~/.envdir sudo --preserve-env go-task REGISTRY_PASS_VAR=GH_PAT publish

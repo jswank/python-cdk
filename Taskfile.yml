@@ -3,9 +3,6 @@ version: '3'
 env:
   IMAGE: jswank/python-cdk
   TAG: latest
-  REGISTRY: ghcr.io
-  REGISTRY_USER: jswank
-  REGISTRY_PASS_VAR: REGISTRY_PASSWORD # this environment variable will be passed to podman login as the password
 
 tasks:
   default:
@@ -21,3 +18,7 @@ tasks:
       - echo "${{.REGISTRY_PASS_VAR}}" | podman login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin
       - podman push ${REGISTRY}/${IMAGE}:${TAG}
       - podman  logout ${REGISTRY}
+    env:
+      REGISTRY: ghcr.io
+      REGISTRY_USER: jswank
+      REGISTRY_PASS_VAR: REGISTRY_PASSWORD # this environment variable will be passed to podman login as the password
