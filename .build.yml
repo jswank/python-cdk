@@ -19,13 +19,13 @@ tasks:
       sudo rc-service cgroups start
       sleep 1
 
-  # build the image using the just recipe
+  # build the image using the go-task build task
   #   - sudo (-u root) is required to run podman without more setup
   - build: |
       cd python-cdk
       sudo --preserve-env go-task build
 
-  # publish the image using the just recipe
+  # publish the image using the go-task publish task
   #   - set environment variables from the ~/.envdir directory. see
   #   http://smarden.org/runit/chpst.8.html for details on chpst
   #   - sudo (-u root) is required to run podman without more setup
