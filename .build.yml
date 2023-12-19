@@ -10,7 +10,7 @@ sources:
 
 packages:
   - podman
-  - just
+  - go-task
   - runit
 
 tasks:
@@ -23,7 +23,7 @@ tasks:
   #   - sudo (-u root) is required to run podman without more setup
   - build: |
       cd python-cdk
-      sudo --preserve-env just build
+      sudo --preserve-env go-task build
 
   # publish the image using the just recipe
   #   - set environment variables from the ~/.envdir directory. see
@@ -32,4 +32,4 @@ tasks:
   #   - sudo --preserve-env is required to pass environment variables 
   - publish: |
       cd python-cdk
-      chpst -e ~/.envdir sudo --preserve-env just registry_pass_var=GH_PAT publish
+      chpst -e ~/.envdir sudo --preserve-env go-task registry_pass_var=GH_PAT publish
