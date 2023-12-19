@@ -1,10 +1,11 @@
-FROM ghcr.io/jswank/alpine-cli:edge
+FROM ghcr.io/jswank/alpine-cli:3
 
 LABEL org.opencontainers.image.description A CLI environment for AWS CLI & CDK
 
 USER root
 
-RUN apk add -U --no-cache stow curl git just \
+RUN apk add -U --no-cache stow curl git \
+  just go-task \
   neovim py3-pynvim \
   py3-pip py3-virtualenv \
   aws-cli aws-cli-doc mandoc \
